@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <input type="text" name="username" placeholder="email" id='username' #username required/>
+    <input type="password" name="password" placeholder="password" id='password' #password required/>
+    <button id="signupButton" type="submit" (click)="userSignup(username.value, password.value)">Signup</button>
+</body>
+</html>

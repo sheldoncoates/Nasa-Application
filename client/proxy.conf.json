@@ -1,0 +1,9 @@
+{
+    "/api/*": {
+        "target": "https://lab05-sheldoncoates.c9users.io:8081",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "info"
+    }
+}
+

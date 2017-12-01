@@ -23,30 +23,43 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.post('/login', function(req, res){
-    var username = req.body.username;
-    var password = req.body.password;
+router.get('/', function(req, res) {
+    res.json({ message: 'Hello World' });
+});
 
-    user.findOne({username: username}, function(err, user){
+router.post('/login', function(req, res){
+    var username = sanitizeHtml(req.body.username, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var password = sanitizeHtml(req.body.password, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    
+    if(username == "" || password == ""){
+        res.json("injection detected");
+    }else{
+        user.findOne({username: username}, function(err, user){
         var response = res;
         if(err){
             console.log(err);
             return res.status(500).send("error");
         }
         if(!user){
-            return res.status(404).send("user does not exist");
+            return res.json("user does not exist");
         }
         var hashPassword = user.password;
         bcrypt.compare(password, hashPassword, function(err, res){
             if(res == true){
-                return response.status(200).send("user has been found with matching password");
+                return response.json("user has been found with matching password");
             }
             else{
-                return response.status(404).send("password does not match username");
+                return response.json("password does not match username");
             }
         });
     });
-    
+    }
 });
 
 router.post('/register', function(req, res){
@@ -60,8 +73,9 @@ router.post('/register', function(req, res){
     });
     
     if(username == "" || password == ""){
-        res.status(400).send("injection detected");
+        res.json("injection detected");
     }else{
+
         var newUser = new user();
         newUser.username = username;
         newUser.password = password;
@@ -71,15 +85,14 @@ router.post('/register', function(req, res){
                 newUser.save(function(err, savedUser){
                     if (err) {
                         console.log(err);
-                        return res.status(500).send();
+                        return res.status(500).send("error");
                     }
-                    return res.status(200).send();
+                    return res.json("user added");
                 });
             });
         });
     }
 });
-
 
 app.use('/api', router);
 
