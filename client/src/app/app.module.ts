@@ -12,13 +12,15 @@ import { AuthGuard } from './auth-guard.service';
 import { SearchService } from './search.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CollectionComponent } from './collection/collection.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ProfileComponent,
-    CollectionComponent
+    CollectionComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

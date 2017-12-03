@@ -114,16 +114,75 @@ router.post('/createCollection', function(req, res) {
 
 router.post('/getCollections', function(req, res) {
     var username = req.body.username;
-    console.log(username);
     collection.find({username: username}, function(err, collection){
         if(err){
             console.log(err);
         }
         return res.json(collection);
-    })
+    });
     
     console.log('got collection');
 });
+
+router.post('/addUrl', function(req, res) {
+    var collectionName = req.body.name;
+    collection.findOne({name: collectionName}, function(err, collection){
+        if(err){
+            console.log(err);
+        }
+        if(!collection){
+            return res.json("no collection exist");
+        }
+        collection.urls.push(req.body.url);
+        collection.save(function(err){
+            if(err){
+                console.log(err);
+            }
+            return res.json("added picture");
+        })
+    })
+    
+})
+
+router.post('/deleteCollection', function(req, res) {
+    var collectionName = req.body.name;
+    collection.findOne({name: collectionName}, function(err, collection){
+        if(err){
+            console.log(err);
+        }
+        collection.remove();
+    })
+})
+
+router.post('/deleteUrl', function(req, res) {
+    collection.findOne({name: req.body.name}, function(err, collection){
+        var index = collection.urls.indexOf(req.body.url);
+        if(index!== -1){
+            collection.urls.splice(index,1);
+            collection.save();
+        }
+        return res.json("deleted")
+    })
+})
+
+router.post('/rename', function(req, res) {
+    collection.findOne({name: req.body.name}, function(err, collection){
+        if(err){
+            console.log(err);
+        }
+        collection.name = req.body.newname;
+        collection.save();
+    })
+})
+
+router.get('/getAllCollections', function(req, res){
+    collection.find(function(err, collection){
+        if(err){
+            console.log(err);
+        }
+        return res.json(collection);
+    })
+})
 
 app.use('/api', router);
 

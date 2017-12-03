@@ -7,7 +7,16 @@
 <a routerLink="/home"><button *ngIf="auth.isAuthenticated()" (click)="auth.logout()">Log Out</button></a>
 <a routerLink="/collection"><button *ngIf="auth.isAuthenticated()" >Create Collection</button></a>
 <button (click)="showCollections()">Show collections</button>
-<div *ngFor ='let x of othercollections'>
-  <h4>Collection: {{ x }}</h4>
+<a routerLink="/search"><button *ngIf="auth.isAuthenticated()" >Search</button></a>
+<div *ngFor ='let x of othercollections; let i = index'>
+  <h4 style="display:inline;">Collection: {{ x }}</h4>
+  <input type="text" name="" placeholder="rename" #rename/>
+  <button value='{{x}}' #button (click)="renameCollection(button.value, rename.value)">Rename</button>
+  <button value='{{x}}' #button (click)="deleteCollection(button.value)">Delete Collection</button><br>
+  <div *ngFor ='let y of myarray[i];' style="display:inline-block;">
+    <figure>
+      <img src="{{ y }}"style="height:230px;width:230px;">
+      <figcaption><button (click)='deleteImage(y, x)'>Delete</button></figcaption>
+    </figure>
+  </div>
 </div>
-<img src="{{ imageCollection }}">
