@@ -1,0 +1,13 @@
+<p> 
+  user nickname: {{ profile?.nickname }}<br>
+  user email: {{ profile?.name }}
+</p>
+<img src="{{profile?.picture}}" >
+<a routerLink="/home"><button *ngIf="auth.isAuthenticated()" >home</button></a>
+<a routerLink="/home"><button *ngIf="auth.isAuthenticated()" (click)="auth.logout()">Log Out</button></a>
+<a routerLink="/collection"><button *ngIf="auth.isAuthenticated()" >Create Collection</button></a>
+<button (click)="showCollections()">Show collections</button>
+<div *ngFor ='let x of othercollections'>
+  <h4>Collection: {{ x }}</h4>
+</div>
+<img src="{{ imageCollection }}">

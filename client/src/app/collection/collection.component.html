@@ -1,0 +1,24 @@
+<h4>Create a collection to add pics to later</h4>
+<a routerLink="/home"><button *ngIf="auth.isAuthenticated()" >home</button></a>
+<a routerLink="/profile"><button *ngIf="auth.isAuthenticated()" >Profile</button></a>
+<a routerLink="/home"><button *ngIf="auth.isAuthenticated()" (click)="auth.logout()">Log Out</button></a><br>
+
+Name: <input type="text" placeholder="Collection name" #name/><br>
+Description: <input type="text" placeholder="Collection description" #description/><br>
+Visibilty:  <select #visibility>
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
+            </select><br>
+<a routerLink="/profile"><button *ngIf="auth.isAuthenticated()" (click)="addCollection(name.value, description.value, visibility.value)">Create Collection</button></a>
+
+
+
+<!--<input type="text" name="nasaSearch" placeholder="search" #search/>-->
+<!--<button *ngIf="auth.isAuthenticated()" type="submit" (click)="searchNasa(search.value)">Search</button>-->
+<!--<p *ngIf='searching'>Fetching data...</p>-->
+<!--<div *ngFor="let image of imageLinks; let i = index">-->
+<!--<h4>Title: {{ imageNames[i]}}</h4>-->
+<!--<img src='{{ image }}' style="height:25%;width:25%;">-->
+<!--<button type="submit" >Add to collection</button>-->
+<!--</div>-->
+
