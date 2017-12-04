@@ -10,7 +10,7 @@ import { SearchService } from '../search.service';
 export class CollectionComponent implements OnInit {
   profile: any;
   constructor(public auth: AuthService, public search: SearchService) { }
-
+  //add a collection from user profile page
   addCollection(name: string, description: string, visibility: string){
       this.search.addCollection(this.auth.userProfile.name, name, description, visibility).subscribe(data=>{
         //alert(data._body);

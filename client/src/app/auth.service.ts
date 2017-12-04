@@ -35,11 +35,11 @@ export class AuthService {
   constructor(public router: Router) {
     
   }
-
+  //authorizes user
   public login(): void {
     this.auth0.authorize();
   }
-  
+  //redirects authenticated user
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {

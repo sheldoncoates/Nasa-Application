@@ -6,17 +6,17 @@
 <a routerLink="/home"><button *ngIf="auth.isAuthenticated()" >home</button></a>
 <a routerLink="/home"><button *ngIf="auth.isAuthenticated()" (click)="auth.logout()">Log Out</button></a>
 <a routerLink="/collection"><button *ngIf="auth.isAuthenticated()" >Create Collection</button></a>
-<button (click)="showCollections()">Show collections</button>
 <a routerLink="/search"><button *ngIf="auth.isAuthenticated()" >Search</button></a>
-<div *ngFor ='let x of othercollections; let i = index'>
-  <h4 style="display:inline;">Collection: {{ x }}</h4>
+<div *ngFor ='let x of objects; let i = index'>
+  <h4 style="display:inline;">Collection: {{ x.name }}</h4>
+  visibility: {{ x.visibility }} <button (click)='changeVisibility(x.name, x.visibility)'>Change</button>
   <input type="text" name="" placeholder="rename" #rename/>
-  <button value='{{x}}' #button (click)="renameCollection(button.value, rename.value)">Rename</button>
-  <button value='{{x}}' #button (click)="deleteCollection(button.value)">Delete Collection</button><br>
+  <button value='{{x.name}}' #button (click)="renameCollection(button.value, rename.value)">Rename</button>
+  <button value='{{x.name}}' #button (click)="deleteCollection(button.value)">Delete Collection</button><br>
   <div *ngFor ='let y of myarray[i];' style="display:inline-block;">
     <figure>
       <img src="{{ y }}"style="height:230px;width:230px;">
-      <figcaption><button (click)='deleteImage(y, x)'>Delete</button></figcaption>
+      <figcaption><button (click)='deleteImage(y, x.name)'>Delete</button></figcaption>
     </figure>
   </div>
 </div>

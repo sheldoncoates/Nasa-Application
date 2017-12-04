@@ -13,6 +13,7 @@ import { SearchService } from './search.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CollectionComponent } from './collection/collection.component';
 import { SearchComponent } from './search/search.component';
+import { PolicyComponent } from './policy/policy.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SearchComponent } from './search/search.component';
     HomeComponent,
     ProfileComponent,
     CollectionComponent,
-    SearchComponent
+    SearchComponent,
+    PolicyComponent
   ],
   imports: [
     BrowserModule,

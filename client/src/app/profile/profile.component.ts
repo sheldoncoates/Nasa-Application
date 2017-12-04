@@ -11,17 +11,19 @@ import { SearchService } from '../search.service';
 export class ProfileComponent implements OnInit {
   profile: any;
   othercollections: any[] = [];
-  imageCollection: any[] = [];
+  objects:any[]=[];
   constructor(public auth: AuthService, public search: SearchService) { }
   myarray = new Array();
+  //show the users collections
   showCollections(){
     this.othercollections = [];
-    this.imageCollection = [];
+    this.objects = [];
     this.search.getCollections(this.auth.userProfile.name).subscribe(data=>{
 
         for(var i = 0; i < data.length; i++){
           this.myarray[i] = new Array();
           this.othercollections.push(data[i].name)
+          this.objects.push(data[i]);
           for(var j = 0; j < data[i].urls.length; j++){
             this.myarray[i].push(data[i].urls[j]);
           }
@@ -30,38 +32,51 @@ export class ProfileComponent implements OnInit {
     })
     
   }
+  //allows the user to change visibility
+  changeVisibility(name:string, visibility: string){
+    this.search.changeVisibility(name, visibility).subscribe(data=>{
+        console.log(data);
+    })
+    location.reload();
+  }
+  //allows the user to delete collections
   deleteCollection(name: string){
     this.search.deleteCollection(name).subscribe(data=>{
         console.log(data);
+        location.reload();
     })
-    this.showCollections();
+    
   }
-  
+  //allows the user to delete a picture in a collection
   deleteImage(url: string, collectionName: string){
 
     this.search.deleteImage(url, collectionName).subscribe(data=>{
         console.log(data);
+        location.reload();
     })
-    setTimeout(this.showCollections(), 1000);
+    
   }
-  
+  //allows the user to rename the collection
   renameCollection(name: string, newname: string){
     if(newname == ''){
       alert('enter new collection name');
     }else{
       this.search.renameCollection(name, newname).subscribe(data=>{
         console.log(data);
+        location.reload();
     })
-    setTimeout(this.showCollections(), 1000);
+    
     }
   }
  
   ngOnInit() {
     if (this.auth.userProfile) {
       this.profile = this.auth.userProfile;
+      this.showCollections();
     } else {
       this.auth.getProfile((err, profile) => {
         this.profile = profile;
+        this.showCollections();
       });
     }
   }

@@ -21,89 +21,29 @@ router.use(function(req, res, next) {
     console.log('Something is happening');
     next();
 });
-
-router.get('/', function(req, res) {
-    res.json({ message: 'Hello World' });
-});
-
-router.post('/login', function(req, res){
-    var username = sanitizeHtml(req.body.username, {
-        allowedTags: [],
-        allowedAttributes: []
-    });
-    var password = sanitizeHtml(req.body.password, {
-        allowedTags: [],
-        allowedAttributes: []
-    });
-    
-    if(username == "" || password == ""){
-        res.json("injection detected");
-    }else{
-        user.findOne({username: username}, function(err, user){
-        var response = res;
-        if(err){
-            console.log(err);
-            return res.status(500).send("error");
-        }
-        if(!user){
-            return res.json("user does not exist");
-        }
-        var hashPassword = user.password;
-        bcrypt.compare(password, hashPassword, function(err, res){
-            if(res == true){
-                return response.json("user has been found with matching password");
-            }
-            else{
-                return response.json("password does not match username");
-            }
-        });
-    });
-    }
-});
-
-router.post('/register', function(req, res){
-    var username = sanitizeHtml(req.body.username, {
-        allowedTags: [],
-        allowedAttributes: []
-    });
-    var password = sanitizeHtml(req.body.password, {
-        allowedTags: [],
-        allowedAttributes: []
-    });
-    
-    if(username == "" || password == ""){
-        res.json("injection detected");
-    }else{
-        var newUser = new user();
-        newUser.username = username;
-        newUser.password = password;
-        user.findOne({username: username}, function(err, user){
-            if(user){
-                res.json("username taken");
-            }else{
-                bcrypt.genSalt(saltRounds, function(err, salt) {
-                bcrypt.hash(newUser.password, salt, function(err, hash){
-                    newUser.password = hash;
-                    newUser.save(function(err, savedUser){
-                        if (err) {
-                            console.log(err);
-                            return res.status(500).send("error");
-                        }
-                        return res.json("user added");
-                    });
-                });
-                });
-            }
-        });
-    }
-});
-
+//to create collection in db
 router.post('/createCollection', function(req, res) {
+    var username = sanitizeHtml(req.body.username, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var name = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var description = sanitizeHtml(req.body.description, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var visibility = sanitizeHtml(req.body.visibility, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
     var newCollection = new collection();
-    newCollection.username = req.body.username;
-    newCollection.name = req.body.name;
-    newCollection.description = req.body.description;
-    newCollection.visibility = req.body.visibility;
+    newCollection.username = username;
+    newCollection.name = name;
+    newCollection.description = description;
+    newCollection.visibility = visibility;
     newCollection.save(function(err, savedCollection){
         if(err){
             console.log(err);
@@ -111,9 +51,12 @@ router.post('/createCollection', function(req, res) {
         return res.json("new collection created");
     });
 });
-
+//to get specific collection
 router.post('/getCollections', function(req, res) {
-    var username = req.body.username;
+    var username = sanitizeHtml(req.body.username, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
     collection.find({username: username}, function(err, collection){
         if(err){
             console.log(err);
@@ -123,9 +66,16 @@ router.post('/getCollections', function(req, res) {
     
     console.log('got collection');
 });
-
+//adding an image to a collection
 router.post('/addUrl', function(req, res) {
-    var collectionName = req.body.name;
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var url = sanitizeHtml(req.body.url, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
     collection.findOne({name: collectionName}, function(err, collection){
         if(err){
             console.log(err);
@@ -133,7 +83,7 @@ router.post('/addUrl', function(req, res) {
         if(!collection){
             return res.json("no collection exist");
         }
-        collection.urls.push(req.body.url);
+        collection.urls.push(url);
         collection.save(function(err){
             if(err){
                 console.log(err);
@@ -143,9 +93,12 @@ router.post('/addUrl', function(req, res) {
     })
     
 })
-
+//deleting a collection
 router.post('/deleteCollection', function(req, res) {
-    var collectionName = req.body.name;
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
     collection.findOne({name: collectionName}, function(err, collection){
         if(err){
             console.log(err);
@@ -153,10 +106,18 @@ router.post('/deleteCollection', function(req, res) {
         collection.remove();
     })
 })
-
+//deleting an image
 router.post('/deleteUrl', function(req, res) {
-    collection.findOne({name: req.body.name}, function(err, collection){
-        var index = collection.urls.indexOf(req.body.url);
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    var url = sanitizeHtml(req.body.url, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    collection.findOne({name: collectionName}, function(err, collection){
+        var index = collection.urls.indexOf(url);
         if(index!== -1){
             collection.urls.splice(index,1);
             collection.save();
@@ -164,23 +125,70 @@ router.post('/deleteUrl', function(req, res) {
         return res.json("deleted")
     })
 })
-
+//renaming a collection
 router.post('/rename', function(req, res) {
-    collection.findOne({name: req.body.name}, function(err, collection){
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    collection.findOne({name: collectionName}, function(err, collection){
         if(err){
             console.log(err);
         }
-        collection.name = req.body.newname;
+        var newname = sanitizeHtml(req.body.newname, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+        collection.name = newname;
         collection.save();
     })
 })
-
+//changing visibility
+router.post('/visibility', function(req, res) {
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    collection.findOne({name: collectionName}, function(err, collection) {
+        if(err){
+            console.log(err);
+        }
+        if(req.body.visibilty == 'public' || req.body.visibility == 'Public'){
+            collection.visibility = "Private";
+        }
+        if(req.body.visibility == 'private' || req.body.visibility == 'Private'){
+            collection.visibility = "Public";
+        }
+        collection.save();
+    })
+    res.json('Visibilty changed');
+})
+//getting all collections
 router.get('/getAllCollections', function(req, res){
     collection.find(function(err, collection){
         if(err){
             console.log(err);
         }
         return res.json(collection);
+    })
+})
+//making a rating
+router.post('/rating', function(req, res) {
+    var collectionName = sanitizeHtml(req.body.name, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+    collection.findOne({name: collectionName}, function(err, collection) {
+        if(err){
+            console.log(err);
+        }
+        var rating = sanitizeHtml(req.body.rating, {
+        allowedTags: [],
+        allowedAttributes: []
+    });
+        collection.rating = rating;
+        collection.save();
+        res.json('rating changed');
     })
 })
 

@@ -15,7 +15,7 @@ othercollections: any[] = [];
   imageLinks: any[] = [];
   imageNames: any[] = [];
   searching: boolean = false;
-  
+  //shows all the collections names for the user
   showCollections(){
     this.othercollections = [];
     this.search.getCollections(this.auth.userProfile.name).subscribe(data=>{
@@ -26,12 +26,15 @@ othercollections: any[] = [];
     })
     
   }
+  //allos the user to add an image to a collection of choice
   addImageToCollection(url:string, collectionName: string){
     this.search.addImageToCollection(url, collectionName).subscribe(data=>{
         return console.log(url + ' ' + collectionName);
     })
     
   }
+  //how the user can search nasa
+  //combines queries into  a redeable url for nasa api
   searchNasa(keyword: string){
     this.showCollections();
   
@@ -51,6 +54,7 @@ othercollections: any[] = [];
     }
     
   }
+  //handle the success of the nasa api return
   handleSuccess(data){
     console.log(data.collection.items);
     this.images = data.collection.items;
